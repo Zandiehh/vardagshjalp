@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privat vardagshjälp för äldre — Julia Hedström</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&family=Caveat:wght@400;500;600&display=swap" />
+<link rel="stylesheet" href="styles.css" />
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="strings.js"></script>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel" src="icons.jsx"></script>
+<script type="text/babel" src="booking.jsx"></script>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+function App() {
+  const [lang, setLang] = useState(() => localStorage.getItem("lang") || "sv");
+  useEffect(() => { localStorage.setItem("lang", lang); document.documentElement.lang = lang; }, [lang]);
+
+  const T = window.STRINGS[lang];
+
+  return (
+    <>
+      <Nav lang={lang} setLang={setLang} T={T} />
+      <Hero T={T} />
+      <About T={T} />
+      <Services T={T} />
+      <Pricing T={T} />
+      <Booking T={T} lang={lang} />
+      <Contact T={T} />
+      <Footer T={T} />
+    </>
+  );
+}
+
+function Nav({ lang, setLang, T }) {
+  return (
+    <nav className="nav">
+      <div className="nav__inner">
+        <div className="nav__brand">
+          <span className="nav__brand-mark"><Icon.Heart size={18} /></span>
+          Vardagshjälp
+        </div>
+        <div className="nav__links">
+          <a href="#about">{T.nav.about}</a>
+          <a href="#services">{T.nav.services}</a>
+          <a href="#pricing">{T.nav.pricing}</a>
+          <a href="#book">{T.nav.book}</a>
+          <a href="#contact">{T.nav.contact}</a>
+          <div className="lang-toggle" role="group" aria-label="Language">
+            <button className={lang === "sv" ? "active" : ""} onClick={() => setLang("sv")}>SV</button>
+            <button className={lang === "en" ? "active" : ""} onClick={() => setLang("en")}>EN</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+function Hero({ T }) {
+  return (
+    <section className="hero">
+      <div className="hero__deco" aria-hidden="true">
+        <span className="leaf leaf--hero-tl"><Icon.Leaf width={300} /></span>
+        <span className="leaf leaf--hero-tr"><Icon.LeafSprig width={170} /></span>
+      </div>
+      <div className="wrap">
+        <div className="hero__grid">
+          <div style={{ position: "relative", zIndex: 2 }}>
+            <span className="hero__eyebrow">{T.hero.eyebrow} <Icon.Heart size={18} /></span>
+            <h1>
+              {T.hero.title1}<br />
+              {T.hero.title2}<br />
+              <em>{T.hero.title3} <Icon.Heart size={26} /></em>
+            </h1>
+            <p className="hero__lede">{T.hero.lede}</p>
+            <div className="hero__cta-row">
+              <a href="#book" className="btn btn--primary">{T.hero.ctaBook} <Icon.ArrowR /></a>
+              <a href="tel:0702027494" className="btn btn--ghost"><Icon.Phone /> {T.hero.ctaCall}</a>
+            </div>
+          </div>
+          <div style={{ position: "relative" }}>
+            <div className="hero__photo" />
+            <div className="hero__badge">
+              {T.hero.badge.map((l, i) => <div key={i}>{l}</div>)}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function About({ T }) {
+  return (
+    <section id="about" className="section wrap">
+      <span className="leaf leaf--about-r"><Icon.LeafSprig width={140} /></span>
+      <div className="about">
+        <div className="about__photo" />
+        <div className="about__body">
+          <span className="section-eyebrow">{T.about.eyebrow}</span>
+          <h2 className="section-title">{T.about.title}</h2>
+          <p>{T.about.p1}</p>
+          <p>{T.about.p2}</p>
+          <p>{T.about.p3}</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Services({ T }) {
+  const ICONS = [Icon.Home, Icon.Car, Icon.Basket, Icon.People, Icon.Eye];
+  return (
+    <section id="services" className="section wrap">
+      <span className="leaf leaf--services-l"><Icon.LeafSprig width={130} /></span>
+      <div className="services-head">
+        <span className="section-eyebrow">{T.services.eyebrow}</span>
+        <h2 className="section-title">{T.services.title}</h2>
+        <p className="section-lede">{T.services.lede}</p>
+      </div>
+      <div className="services-grid">
+        {T.services.items.map((s, i) => {
+          const Ic = ICONS[i];
+          return (
+            <div key={i} className="service-card">
+              <div className="service-card__icon"><Ic size={28} /></div>
+              <h3>{s.name}</h3>
+              <p>{s.desc}</p>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function Pricing({ T }) {
+  return (
+    <section id="pricing" className="section wrap">
+      <div className="info-row">
+        <div className="info-card">
+          <div className="info-card__icon"><Icon.Tag /></div>
+          <div>
+            <h3>{T.info.priceLabel}</h3>
+            <p>{T.info.priceText}</p>
+          </div>
+        </div>
+        <div className="info-card">
+          <div className="info-card__icon"><Icon.Pin /></div>
+          <div>
+            <h3>{T.info.areaLabel}</h3>
+            <p>{T.info.areaText}</p>
+          </div>
+        </div>
+      </div>
+      <div className="rut-note">
+        <strong>{T.info.rutTitle}</strong> {T.info.rutText}
+      </div>
+    </section>
+  );
+}
+
+function Booking({ T, lang }) {
+  return (
+    <section id="book" className="section booking">
+      <span className="leaf leaf--booking-l"><Icon.Leaf width={220} /></span>
+      <div className="wrap">
+        <div className="booking__head">
+          <span className="section-eyebrow">{T.booking.eyebrow}</span>
+          <h2 className="section-title">{T.booking.title}</h2>
+          <p className="section-lede" style={{ margin: "0 auto" }}>{T.booking.lede}</p>
+        </div>
+        <div className="booking__inner">
+          <BookingForm lang={lang} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Contact({ T }) {
+  return (
+    <section id="contact" className="section wrap">
+      <div className="contact-card">
+        <div>
+          <h3>{T.contact.title} <Icon.Heart size={28} /></h3>
+          <ul className="contact-list">
+            <li><span className="contact-list__icon"><Icon.User /></span> {T.contact.name}</li>
+            <li><span className="contact-list__icon"><Icon.Phone /></span> <a href="tel:0702027494">{T.contact.phone}</a></li>
+            <li><span className="contact-list__icon"><Icon.Mail /></span> <a href="mailto:Hedstromjulia7@gmail.com">{T.contact.email}</a></li>
+          </ul>
+        </div>
+        <div className="contact-quote">
+          {T.contact.quote}
+          <div style={{ textAlign: "right", marginTop: 16, color: "var(--sage-deep)" }}><Icon.Heart size={22} /></div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer({ T }) {
+  return (
+    <footer className="footer">
+      <div className="wrap">
+        {T.footer} <span className="heart">♡</span>
+      </div>
+    </footer>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
