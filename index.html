@@ -58,6 +58,7 @@ function Nav({ lang, setLang, T }) {
           <a href="#pricing">{T.nav.pricing}</a>
           <a href="#book">{T.nav.book}</a>
           <a href="#contact">{T.nav.contact}</a>
+          <a href="#book" className="nav__mobile-action">{T.nav.book}</a>
           <div className="lang-toggle" role="group" aria-label="Language">
             <button className={lang === "sv" ? "active" : ""} onClick={() => setLang("sv")}>SV</button>
             <button className={lang === "en" ? "active" : ""} onClick={() => setLang("en")}>EN</button>
